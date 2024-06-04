@@ -1,15 +1,17 @@
-import { AppointmentForm } from '@/domain/appointment';
-import appointmentFormModel from './appointmentFormModel';
+import { StepOneForm, StepThreeForm, StepTwoForm } from '@/domain/appointment';
 
-const {
-  formField: { category },
-} = appointmentFormModel;
+export const stepOneFormValues: StepOneForm = {
+  category: '',
+  speciality: '',
+};
 
-const formValues: AppointmentForm = {
+export const stepTwoFormValues: StepTwoForm = {
   category: '',
   speciality: '',
   provider: 0,
-  slot: '',
 };
 
-export default formValues;
+export const stepThreeFormValues: StepThreeForm = {
+  slot: '',
+  provider: 0,
+};

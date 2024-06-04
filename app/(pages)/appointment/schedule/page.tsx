@@ -1,11 +1,8 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
 import { AppointmentForm } from '@/domain/appointment';
-import { cn } from '@/lib/utils';
-import { FormikProps, useFormik } from 'formik';
 import { useState } from 'react';
-import formInitialValues from './FormModel/formInitialValues';
+import { FormProvider } from './FormProvider';
 import StepOne from './Stepper/step_one';
 import StepThree from './Stepper/step_three';
 import StepTwo from './Stepper/step_two';
@@ -34,14 +31,16 @@ const steps: Step[] = [
 ];
 
 const renderCurrentStepForm = (
-  form: FormikProps<AppointmentForm>,
-  currentIndex: number
+  currentIndex: number,
+  onNext: () => void,
+  onPrevious: () => void
 ) => {
   const step = steps[currentIndex - 1];
 
   const commonProps = {
     name: step.name,
-    form,
+    onNext,
+    onPrevious,
   };
 
   const StepComponent = step.component;
@@ -50,10 +49,6 @@ const renderCurrentStepForm = (
 };
 
 export default function ScheduleAppointmentPage() {
-  const formik = useFormik<AppointmentForm>({
-    initialValues: formInitialValues,
-    onSubmit: handleFormSubmit,
-  });
   const [currentStep, setCurrentStep] = useState<number>(1);
 
   function handleNext() {
@@ -69,8 +64,10 @@ export default function ScheduleAppointmentPage() {
   return (
     <section className="w-full h-[100dvh] flex flex-col items-center justify-center bg-[url('/placeholder.svg')] bg-cover bg-center">
       <div className="bg-white space-y-8 max-w-3xl w-full  dark:bg-gray-900 rounded-xl overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
-        <form>{renderCurrentStepForm(formik, currentStep)}</form>
-        <div
+        <FormProvider>
+          {renderCurrentStepForm(currentStep, handleNext, handlePrevious)}
+        </FormProvider>
+        {/* <div
           className={cn(
             'flex',
             currentStep === 1 ? 'justify-end' : 'justify-between'
@@ -84,7 +81,7 @@ export default function ScheduleAppointmentPage() {
           <Button size="sm" onClick={handleNext}>
             Next
           </Button>
-        </div>
+        </div> */}
       </div>
     </section>
   );
