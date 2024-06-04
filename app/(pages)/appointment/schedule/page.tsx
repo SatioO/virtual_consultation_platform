@@ -1,17 +1,14 @@
 'use client';
 
 import { useState } from 'react';
+import { AppointmentForm } from './FormModel/formInitialValues';
 import { FormProvider } from './FormProvider';
+import StepFour from './Stepper/step_four';
 import StepOne from './Stepper/step_one';
 import StepThree from './Stepper/step_three';
 import StepTwo from './Stepper/step_two';
-import { AppointmentForm } from './FormModel/formInitialValues';
-import StepFour from './Stepper/step_four';
 
 export type Step = {
-  /** Identifies the name of the step & key in initialValues
-   * Can use an 'id' here, doesn't necessarily have to be a 'name' prop.
-   */
   name: string;
   component: React.ElementType;
 };
@@ -49,7 +46,6 @@ const renderCurrentStepForm = (
   };
 
   const StepComponent = step.component;
-
   return <StepComponent {...commonProps} />;
 };
 
@@ -72,21 +68,6 @@ export default function ScheduleAppointmentPage() {
         <FormProvider>
           {renderCurrentStepForm(currentStep, handleNext, handlePrevious)}
         </FormProvider>
-        {/* <div
-          className={cn(
-            'flex',
-            currentStep === 1 ? 'justify-end' : 'justify-between'
-          )}
-        >
-          {currentStep > 1 && (
-            <Button variant="outline" size="sm" onClick={handlePrevious}>
-              Previous
-            </Button>
-          )}
-          <Button size="sm" onClick={handleNext}>
-            Next
-          </Button>
-        </div> */}
       </div>
     </section>
   );
