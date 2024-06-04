@@ -1,4 +1,20 @@
-import { StepOneForm, StepThreeForm, StepTwoForm } from '@/domain/appointment';
+type StepOneForm = {
+  category: string;
+  speciality: string;
+};
+
+type StepTwoForm = {
+  category: string;
+  speciality: string;
+  provider: number;
+};
+
+type StepThreeForm = {
+  slot: string;
+  provider: number;
+};
+
+export type AppointmentForm = StepOneForm & StepTwoForm & StepThreeForm;
 
 export const stepOneFormValues: StepOneForm = {
   category: '',

@@ -1,11 +1,12 @@
 'use client';
 
-import { AppointmentForm } from '@/domain/appointment';
 import { useState } from 'react';
 import { FormProvider } from './FormProvider';
 import StepOne from './Stepper/step_one';
 import StepThree from './Stepper/step_three';
 import StepTwo from './Stepper/step_two';
+import { AppointmentForm } from './FormModel/formInitialValues';
+import StepFour from './Stepper/step_four';
 
 export type Step = {
   /** Identifies the name of the step & key in initialValues
@@ -27,6 +28,10 @@ const steps: Step[] = [
   {
     name: 'schedule',
     component: StepThree,
+  },
+  {
+    name: 'patient_details',
+    component: StepFour,
   },
 ];
 
