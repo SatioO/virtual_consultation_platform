@@ -8,24 +8,32 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { formatInTimeZone } from 'date-fns-tz';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { stepThreeFormValues } from '../FormModel/formInitialValues';
+import {
+  AppointmentForm,
+  stepThreeFormValues,
+} from '../FormModel/formInitialValues';
 import { useFormState } from '../FormProvider';
 
 type StepThreeProps = {
   name: string;
   onNext: () => void;
   onPrevious: () => void;
+  onSubmit: (values: AppointmentForm) => void;
 };
 
 const FormSchema = z.object({
   slot: z.string().min(2, 'Slot is required!'),
   provider: z.number().min(1, 'Provider is required'),
+  patient: z.number(),
 });
 
 export default function StepThree(props: StepThreeProps) {
+  const session = useSession();
+
   const [state, setState] = useFormState();
   const [selectedDate, setSelectedDate] = useState(new Date());
 
@@ -54,8 +62,21 @@ export default function StepThree(props: StepThreeProps) {
   }
 
   const onSubmit = async (values: z.infer<typeof FormSchema>) => {
-    setState({ ...state, ...values });
-    props.onNext();
+    if (session.status === 'authenticated') {
+      setState({
+        ...state,
+        ...values,
+        patient: session.data.user.id,
+      });
+      props.onSubmit({
+        ...state,
+        ...values,
+        patient: session.data.user.id,
+      });
+    } else {
+      setState({ ...state, ...values });
+      props.onNext();
+    }
   };
 
   return (
@@ -127,7 +148,11 @@ export default function StepThree(props: StepThreeProps) {
               <Button variant="outline" size="sm" onClick={props.onPrevious}>
                 Previous
               </Button>
-              <Button size="sm" type="submit">
+              <Button
+                size="sm"
+                type="submit"
+                disabled={form.formState.isSubmitting}
+              >
                 Next
               </Button>
             </div>

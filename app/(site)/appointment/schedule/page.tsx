@@ -1,6 +1,10 @@
 'use client';
 
-import { createAppointment } from '@/services/appointment';
+import {
+  createAppointment,
+  createOpenAppointment,
+} from '@/services/appointment';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { Toaster, toast } from 'sonner';
@@ -12,6 +16,7 @@ import StepThree from './Stepper/step_three';
 import StepTwo from './Stepper/step_two';
 
 export default function ScheduleAppointmentPage() {
+  const session = useSession();
   const router = useRouter();
   const [currentStep, setCurrentStep] = useState<number>(1);
 
@@ -24,37 +29,39 @@ export default function ScheduleAppointmentPage() {
   }
 
   async function handleFormSubmit(values: AppointmentForm) {
-    const response = await createAppointment(values);
+    if (session.status === 'authenticated') {
+      await createAppointment(values, session.data?.token);
+    } else {
+      await createOpenAppointment(values);
+    }
+
     toast('Appointment has been created', {
       description: new Date().toISOString(),
       important: true,
       position: 'top-right',
       duration: 2000,
-      onAutoClose(toast) {
+      onAutoClose() {
         router.push('/');
       },
     });
   }
 
   return (
-    <section className="w-full h-[100dvh] flex flex-col items-center justify-center bg-[url('/placeholder.svg')] bg-cover bg-center">
+    <section className="w-full h-[100dvh] flex flex-col items-center justify-center">
       <div className="bg-white space-y-8 max-w-3xl w-full  dark:bg-gray-900 rounded-xl overflow-hidden px-4 py-12 sm:px-6 lg:px-8">
         <FormProvider>
           {currentStep === 1 && (
             <StepOne name={'speciality'} onNext={handleNext} />
           )}
           {currentStep === 2 && (
-            <StepTwo
-              name={'provider'}
-              onNext={handleNext}
-              onPrevious={handlePrevious}
-            />
+            <StepTwo name={'provider'} onNext={handleNext} />
           )}
           {currentStep === 3 && (
             <StepThree
               name={'schedule'}
               onNext={handleNext}
               onPrevious={handlePrevious}
+              onSubmit={handleFormSubmit}
             />
           )}
           {currentStep === 4 && (

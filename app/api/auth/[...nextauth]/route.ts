@@ -7,14 +7,24 @@ const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, account, profile }) {
+    async jwt({ token, account, user }) {
+      if (user) {
+        token.id = user.id;
+        token.token = user.token;
+        token.name = user.name;
+        token.email = user.email;
+      }
+
       if (account && account.type === 'credentials') {
         token.userId = account.providerAccountId;
       }
       return token;
     },
     async session({ session, token, user }) {
-      session.user.id = token.userId;
+      session.user.id = token.id as number;
+      session.token = token.token;
+      session.user.name = token.name;
+      session.user.email = token.email;
       return session;
     },
   },
@@ -30,7 +40,7 @@ const authOptions: NextAuthOptions = {
         username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
         password: { label: 'Password', type: 'password' },
       },
-      async authorize(credentials, req) {
+      async authorize(credentials) {
         const { username, password } = credentials as {
           username: string;
           password: string;
@@ -38,11 +48,14 @@ const authOptions: NextAuthOptions = {
 
         // Return null if user data could not be retrieved
         const response = await login(username, password);
+        const user = response.user;
 
         return {
-          ...response.user,
-          id: response.user.userId,
-          username: response.user.username,
+          ...user,
+          id: +user.userId,
+          name: `${user.name.givenName} ${user.name.familyName}`,
+          email: user.email,
+          token: response.accessToken,
         };
       },
     }),

@@ -255,7 +255,11 @@ export default function StepFour(props: StepFourProps) {
             </div>
           </div>
           <div className="flex justify-end">
-            <Button size="sm" type="submit">
+            <Button
+              size="sm"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
               Create Appointment
             </Button>
           </div>

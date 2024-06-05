@@ -12,6 +12,7 @@ type StepTwoForm = {
 type StepThreeForm = {
   slot: string;
   provider: number;
+  patient: number;
 };
 
 type StepFourForm = {
@@ -43,6 +44,7 @@ export const stepTwoFormValues: StepTwoForm = {
 export const stepThreeFormValues: StepThreeForm = {
   slot: '',
   provider: 0,
+  patient: 0,
 };
 
 export const stepFourFormValues: StepFourForm = {

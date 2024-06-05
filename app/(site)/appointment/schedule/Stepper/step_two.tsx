@@ -30,7 +30,6 @@ import { useFormState } from '../FormProvider';
 type StepTwoProps = {
   name: string;
   onNext: () => void;
-  onPrevious: () => void;
 };
 
 const FormSchema = z.object({
@@ -196,10 +195,7 @@ export default function StepTwo(props: StepTwoProps) {
                 ))}
             </div>
           </div>
-          <div className="flex justify-between">
-            <Button variant="outline" size="sm" onClick={props.onPrevious}>
-              Previous
-            </Button>
+          <div className="flex justify-end">
             <Button size="sm" type="submit">
               Next
             </Button>

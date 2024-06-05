@@ -24,6 +24,7 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
     mrn: '',
     name: { familyName: '', middleName: '', givenName: '' },
     ssn: '',
+    patient: 0,
   });
 
   return (
