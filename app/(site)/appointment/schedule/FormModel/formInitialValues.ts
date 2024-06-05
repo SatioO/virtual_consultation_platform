@@ -14,7 +14,20 @@ type StepThreeForm = {
   provider: number;
 };
 
-export type AppointmentForm = StepOneForm & StepTwoForm & StepThreeForm;
+type StepFourForm = {
+  name: { familyName: string; givenName: string; middleName: string };
+  email: string;
+  dob: string;
+  administrativeSex: string;
+  maritalStatus: string;
+  mrn: string;
+  ssn: string;
+};
+
+export type AppointmentForm = StepOneForm &
+  StepTwoForm &
+  StepThreeForm &
+  StepFourForm;
 
 export const stepOneFormValues: StepOneForm = {
   category: '',
@@ -30,4 +43,14 @@ export const stepTwoFormValues: StepTwoForm = {
 export const stepThreeFormValues: StepThreeForm = {
   slot: '',
   provider: 0,
+};
+
+export const stepFourFormValues: StepFourForm = {
+  name: { familyName: '', middleName: '', givenName: '' },
+  email: '',
+  dob: '',
+  administrativeSex: '',
+  maritalStatus: '',
+  mrn: '',
+  ssn: '',
 };

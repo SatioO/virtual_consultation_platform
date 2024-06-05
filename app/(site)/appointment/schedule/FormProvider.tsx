@@ -1,4 +1,3 @@
-import { AppointmentForm } from '@/domain/appointment';
 import {
   Dispatch,
   SetStateAction,
@@ -6,6 +5,7 @@ import {
   useContext,
   useState,
 } from 'react';
+import { AppointmentForm } from './FormModel/formInitialValues';
 
 export const FormContext = createContext<
   [AppointmentForm, Dispatch<SetStateAction<AppointmentForm>>] | null
@@ -17,6 +17,13 @@ export function FormProvider({ children }: { children: React.ReactNode }) {
     speciality: '',
     provider: 0,
     slot: '',
+    administrativeSex: '',
+    dob: '',
+    email: '',
+    maritalStatus: '',
+    mrn: '',
+    name: { familyName: '', middleName: '', givenName: '' },
+    ssn: '',
   });
 
   return (
