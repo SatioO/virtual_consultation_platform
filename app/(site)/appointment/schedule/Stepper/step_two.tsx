@@ -8,7 +8,6 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from '@/components/ui/form';
 import {
   Select,
@@ -127,7 +126,6 @@ export default function StepTwo(props: StepTwoProps) {
                         </SelectContent>
                       </Select>
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />
@@ -157,7 +155,6 @@ export default function StepTwo(props: StepTwoProps) {
                         </SelectContent>
                       </Select>
                     </FormControl>
-                    <FormMessage />
                   </FormItem>
                 )}
               />

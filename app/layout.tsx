@@ -1,4 +1,4 @@
-import Header from '@/components/ui/header';
+import Header from '@/components/feature/header';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';

@@ -4,7 +4,7 @@ import MountainIcon from '@/public/icons/MountainIcon';
 import { PlaceholderIcon } from '@/public/icons/Placeholder';
 import { signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
-import { Button } from './button';
+import { Button } from '../ui/button';
 
 const Header = () => {
   const session = useSession();
