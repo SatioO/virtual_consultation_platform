@@ -10,7 +10,6 @@ const authOptions: NextAuthOptions = {
     async jwt({ token, account, profile }) {
       if (account && account.type === 'credentials') {
         token.userId = account.providerAccountId;
-        token.username = token.email;
       }
       return token;
     },
