@@ -104,7 +104,7 @@ export default function LoginPage(props: PageProps) {
             priority
             width="1920"
             height="1080"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover brightness-70"
           />
         </div>
       </div>

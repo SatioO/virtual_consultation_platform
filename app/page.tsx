@@ -31,7 +31,7 @@ export default async function Home() {
             now.
           </p>
         </div>
-        <Link href={'/appointment/schedule'}>
+        <Link href={'/appointment/schedule'} prefetch>
           <Button variant="outline">
             <b>Book Appointment</b>
           </Button>

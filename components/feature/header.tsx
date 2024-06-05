@@ -3,6 +3,7 @@
 import { signOut, useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Avatar } from '../ui/avatar';
 import { Button } from '../ui/button';
 import {
@@ -16,10 +17,13 @@ import {
 import bg from '/public/images/logo.png';
 
 const Header = () => {
+  const router = useRouter();
   const session = useSession();
 
   async function handleLogout() {
-    await signOut();
+    await signOut({ redirect: false });
+
+    router.push('/login');
   }
 
   return (
