@@ -7,7 +7,7 @@ import {
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { AppointmentForm } from './FormModel/formInitialValues';
 import { FormProvider } from './FormProvider';
 import StepFour from './Stepper/step_four';
@@ -35,14 +35,11 @@ export default function ScheduleAppointmentPage() {
       await createOpenAppointment(values);
     }
 
+    router.push('/');
     toast('Appointment has been created', {
       description: new Date().toISOString(),
       important: true,
       position: 'top-right',
-      duration: 2000,
-      onAutoClose() {
-        router.push('/');
-      },
     });
   }
 
@@ -68,7 +65,6 @@ export default function ScheduleAppointmentPage() {
             <StepFour name={'provider'} onSubmit={handleFormSubmit} />
           )}
         </FormProvider>
-        <Toaster />
       </div>
     </section>
   );

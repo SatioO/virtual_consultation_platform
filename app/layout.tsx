@@ -2,6 +2,7 @@ import Header from '@/components/feature/header';
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
+import { Toaster } from 'sonner';
 import './globals.css';
 import Provider from './provider';
 
@@ -33,6 +34,7 @@ export default function RootLayout({
         <Provider>
           <Header />
           <main className="flex-1">{children}</main>
+          <Toaster />
         </Provider>
       </body>
     </html>
