@@ -1,4 +1,5 @@
 'use client';
+
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -29,11 +30,13 @@ export default function LoginPage(props: PageProps) {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    await signIn('credentials', {
+    const response = await signIn('credentials', {
       username: inputs.username,
       password: inputs.password,
-      callbackUrl: '/',
+      callbackUrl: '/dashboard',
     });
+
+    console.log({ response });
   };
   return (
     <>

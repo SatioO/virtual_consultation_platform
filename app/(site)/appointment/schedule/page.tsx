@@ -35,11 +35,11 @@ export default function ScheduleAppointmentPage() {
       await createOpenAppointment(values);
     }
 
-    router.push('/');
+    router.push('/dashboard');
     toast('Appointment has been created', {
       description: new Date().toISOString(),
       important: true,
-      position: 'top-right',
+      position: 'bottom-center',
     });
   }
 

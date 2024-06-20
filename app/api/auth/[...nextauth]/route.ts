@@ -13,6 +13,7 @@ const authOptions: NextAuthOptions = {
         token.token = user.token;
         token.name = user.name;
         token.email = user.email;
+        token.roles = user.roles;
       }
 
       if (account && account.type === 'credentials') {
@@ -25,6 +26,7 @@ const authOptions: NextAuthOptions = {
       session.token = token.token;
       session.user.name = token.name;
       session.user.email = token.email;
+      session.user.roles = token.roles as string[];
       return session;
     },
   },
@@ -37,7 +39,7 @@ const authOptions: NextAuthOptions = {
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+        username: { label: 'Username', type: 'text', placeholder: '' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
@@ -55,6 +57,7 @@ const authOptions: NextAuthOptions = {
           id: +user.userId,
           name: `${user.name.givenName} ${user.name.familyName}`,
           email: user.email,
+          roles: user.roles,
           token: response.accessToken,
         };
       },
