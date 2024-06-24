@@ -216,26 +216,6 @@ export default function StepFour(props: StepFourProps) {
             <div className="space-y-2">
               <FormField
                 control={form.control}
-                name="ssn"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Social Security Number</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="ssn"
-                        type="number"
-                        maxLength={12}
-                        placeholder="123-45-6789"
-                        {...field}
-                      />
-                    </FormControl>
-                  </FormItem>
-                )}
-              />
-            </div>
-            <div className="space-y-2">
-              <FormField
-                control={form.control}
                 name="mrn"
                 render={({ field }) => (
                   <FormItem>

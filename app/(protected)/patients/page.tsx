@@ -8,20 +8,18 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { allAppointmentsFetcher } from '@/services/provider';
+import { patientFetcher } from '@/services/patient';
 import { useQuery } from '@tanstack/react-query';
-import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
-export default function AppointmentsPage() {
+export default function PatientsPage() {
   const session = useSession();
 
-  const appointments = useQuery({
-    queryKey: ['provider/appointments/all'],
+  const patients = useQuery({
+    queryKey: ['provider/patients/all'],
     queryFn: () =>
-      session.data &&
-      allAppointmentsFetcher(session.data.user.id, session.data.token),
+      session.data && patientFetcher(session.data.user.id, session.data.token),
     enabled: !!session.data,
   });
 
@@ -75,33 +73,27 @@ export default function AppointmentsPage() {
         <div className="flex-1 p-6">
           <div className="p-8 bg-white">
             <div className="flex items-center gap-2 px-3 py-8 rounded-md hover:bg-muted transition-colors font-medium">
-              <h1 className="text-3xl font-bold">Appointments</h1>
+              <h1 className="text-3xl font-bold">My Patients</h1>
             </div>
             <Table>
               <TableHeader className="bg-slate-400">
                 <TableRow>
                   <TableHead className="text-white">Patient Name</TableHead>
-                  <TableHead className="text-white">Appointment Date</TableHead>
-                  <TableHead className="text-white">Appointment Time</TableHead>
-                  <TableHead className="text-white">Speciality</TableHead>
-                  <TableHead className="text-white">
-                    Appointment Status
-                  </TableHead>
+                  <TableHead className="text-white">Email</TableHead>
+                  <TableHead className="text-white">Gender</TableHead>
+                  <TableHead className="text-white">MRN</TableHead>
+                  <TableHead className="text-white">Status</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {appointments.isFetched &&
-                  appointments.data?.map((appointment) => (
-                    <TableRow className="bg-slate-50" key={appointment.id}>
-                      <TableCell>{`${appointment.patient.name.givenName} ${appointment.patient.name.familyName}`}</TableCell>
-                      <TableCell>
-                        {format(appointment.dateTime, 'MMMM dd, yyyy')}
-                      </TableCell>
-                      <TableCell>
-                        {format(appointment.dateTime, 'hh:mm a')}
-                      </TableCell>
-                      <TableCell>{appointment.speciality.name}</TableCell>
-                      <TableCell>{appointment.status}</TableCell>
+                {patients.isFetched &&
+                  patients.data?.map((patient) => (
+                    <TableRow className="bg-slate-50" key={patient.userId}>
+                      <TableCell>{`${patient.name.givenName} ${patient.name.familyName}`}</TableCell>
+                      <TableCell>{patient.email}</TableCell>
+                      <TableCell>{patient.administrativeSex}</TableCell>
+                      <TableCell>{patient.mrn}</TableCell>
+                      <TableCell>{patient.status}</TableCell>
                     </TableRow>
                   ))}
               </TableBody>

@@ -1,4 +1,5 @@
-import { Patient } from '@/services/patient';
+
+import { Patient } from './patient';
 import { Specialty } from './speciality';
 
 export type Appointment = {

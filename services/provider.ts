@@ -27,7 +27,7 @@ export async function appointmentsFetcher(
   accessToken?: string
 ): Promise<Appointment[]> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/providers/${providerId}/appointments?page=0&size=5`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/providers/${providerId}/appointments?page=0&size=5&sort=dateTime,desc`,
     {
       method: 'GET',
       headers: {
@@ -45,7 +45,7 @@ export async function allAppointmentsFetcher(
   accessToken?: string
 ): Promise<Appointment[]> {
   const response = await fetch(
-    `${process.env.NEXT_PUBLIC_BASE_URL}/providers/${providerId}/appointments?page=0&size=100`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/providers/${providerId}/appointments?page=0&size=100&sort=dateTime,desc`,
     {
       method: 'GET',
       headers: {

@@ -2,12 +2,14 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { appointmentsFetcher } from '@/services/provider';
+import { patientFetcher } from '@/services/patient';
+import { allAppointmentsFetcher } from '@/services/provider';
 import { useQuery } from '@tanstack/react-query';
 import { format } from 'date-fns';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useMemo } from 'react';
 
 const IsProvider = (roles: string[]) => roles.includes('provider');
 const IsPatient = (roles: string[]) => roles.includes('patient');
@@ -15,15 +17,24 @@ const IsPatient = (roles: string[]) => roles.includes('patient');
 function DashboardPage() {
   const session = useSession();
 
-  console.log(session.data && IsProvider(session.data.user.roles));
-
   const appointments = useQuery({
-    queryKey: ['provider/appointments'],
+    queryKey: ['provider/appointments/all'],
     queryFn: () =>
       session.data &&
-      appointmentsFetcher(session.data.user.id, session.data.token),
+      allAppointmentsFetcher(session.data.user.id, session.data.token),
     enabled: !!session.data,
   });
+
+  const patients = useQuery({
+    queryKey: ['provider/patients/5'],
+    queryFn: () =>
+      session.data && patientFetcher(session.data.user.id, session.data.token),
+    enabled: !!session.data,
+  });
+
+  const appointmentsData = useMemo(() => {
+    return appointments.data?.slice(0, 5) ?? [];
+  }, [appointments.data]);
 
   return (
     <div className="flex mt-16">
@@ -55,7 +66,7 @@ function DashboardPage() {
               My Sessions
             </Link>
             <Link
-              href="#"
+              href="/patients"
               className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-muted transition-colors font-medium"
               prefetch={false}
             >
@@ -91,21 +102,95 @@ function DashboardPage() {
                 complete service. You can view your daily schedule, Reach
                 Patients Appointment at home!
               </p>
-              <Link href={'/appointments'} prefetch>
+              <Link href={'/lobby/mvj-wooq-pte'} prefetch>
                 <Button className="mt-4 bg-blue-500">
                   Join Consultation Room
                 </Button>
               </Link>
             </div>
           </div>
-          <div className="flex flex-row flex-1 my-8 gap-4 ">
-            <Card className="w-full max-w-md">
+          <div className="flex flex-row my-8 gap-4">
+            <div className="flex-1 bg-transparent">
+              <main className="flex-1 flex flex-col gap-4 md:gap-4 ">
+                <div className="grid grid-rows-1 md:grid-cols-2 gap-4 md:gap-8">
+                  <div className="grid grid-rows-1 gap-4 md:gap-8">
+                    <Card>
+                      <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">
+                          All Appointments
+                        </CardTitle>
+                        <HospitalIcon className="w-4 h-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">
+                          <Link href={'/patients'}>
+                            {appointments.data?.length}
+                          </Link>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          +0% from last month
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">
+                          My Patients
+                        </CardTitle>
+                        <UsersIcon className="w-4 h-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">
+                          <Link href={'/patients'}>
+                            {patients.data?.length}
+                          </Link>
+                        </div>
+                        <p className="text-xs text-muted-foreground">
+                          +0% from last month
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                  <div className="grid grid-rows-2 gap-4 md:gap-8">
+                    <Card>
+                      <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">
+                          New Sessions
+                        </CardTitle>
+                        <ActivityIcon className="w-4 h-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">0</div>
+                        <p className="text-xs text-muted-foreground">
+                          0% from last month
+                        </p>
+                      </CardContent>
+                    </Card>
+                    <Card>
+                      <CardHeader className="flex flex-row items-center justify-between pb-2">
+                        <CardTitle className="text-sm font-medium">
+                          New Bookings
+                        </CardTitle>
+                        <CalendarIcon className="w-4 h-4 text-muted-foreground" />
+                      </CardHeader>
+                      <CardContent>
+                        <div className="text-2xl font-bold">0</div>
+                        <p className="text-xs text-muted-foreground">
+                          0 since last hour
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+                </div>
+              </main>
+            </div>
+            <Card className=" flex-1 ">
               <CardHeader>
-                <CardTitle>Upcoming Appointments</CardTitle>
+                <CardTitle>All Appointments</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 {appointments.isFetched &&
-                  appointments.data?.map((appointment) => (
+                  appointmentsData.map((appointment) => (
                     <div className="grid gap-3" key={appointment.id}>
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
@@ -122,7 +207,6 @@ function DashboardPage() {
                   ))}
               </CardContent>
             </Card>
-            <Card className="flex-1"></Card>
           </div>
         </div>
       </div>
@@ -253,6 +337,49 @@ function CalendarIcon(props: any) {
       <path d="M16 2v4" />
       <rect width="18" height="18" x="3" y="4" rx="2" />
       <path d="M3 10h18" />
+    </svg>
+  );
+}
+
+function ActivityIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M22 12h-2.48a2 2 0 0 0-1.93 1.46l-2.35 8.36a.25.25 0 0 1-.48 0L9.24 2.18a.25.25 0 0 0-.48 0l-2.35 8.36A2 2 0 0 1 4.49 12H2" />
+    </svg>
+  );
+}
+
+function HospitalIcon(props: any) {
+  return (
+    <svg
+      {...props}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12 6v4" />
+      <path d="M14 14h-4" />
+      <path d="M14 18h-4" />
+      <path d="M14 8h-4" />
+      <path d="M18 12h2a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-9a2 2 0 0 1 2-2h2" />
+      <path d="M18 22V4a2 2 0 0 0-2-2H8a2 2 0 0 0-2 2v18" />
     </svg>
   );
 }
